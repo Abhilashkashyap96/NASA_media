@@ -1,0 +1,12 @@
+#navbar{
+    height: 60px;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0px;
+    padding: 0px;
+}
+#navbar h1{
+    text-align: center;
+    margin: 0 auto;
+}
