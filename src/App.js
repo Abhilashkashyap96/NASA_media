@@ -6,6 +6,7 @@ class App extends React.Component{
   constructor (props){
     super(props);
     this.state ={
+      searchResult: [],
       pictureOfTheDay: {},
       data: []
     }
@@ -31,11 +32,25 @@ class App extends React.Component{
     });
   }
 
+  searchPictures = (search) =>{
+    fetch(`https://images-api.nasa.gov/search?q=${search}`, {
+      method: 'GET'
+    }).then((response) =>{
+        if(response.ok) {
+          response.json().then((result)=>{
+            this.setState({
+              searchResult: result.collection.items
+            })
+          });
+        }
+    })
+  }
+
   render () {
-    console.log(this.state.pictureOfTheDay);
+    console.log(this.state.searchResult);
     return (
       <>
-      <Body data={this.state.data} pictureOfTheDay={this.state.pictureOfTheDay}/>
+      <Body data={this.state.data} pictureOfTheDay={this.state.pictureOfTheDay} searchResult={this.state.searchResult} searchPictures={this.searchPictures}/>
       </>
     )
   }

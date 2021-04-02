@@ -4,8 +4,15 @@ import "./style.css";
 class Body extends React.Component {
   constructor(props) {
     super(props);
+    this.state= {search: ""};
   }
-
+  changeHandler = (e) =>{
+    this.setState({search: e.target.value})
+  }
+  submitHandler = (e) =>{
+    e.preventDefault()
+    console.log(this.state.search)
+  }
   render() {
     const { pictureOfTheDay } = this.props;
     return (
@@ -13,8 +20,8 @@ class Body extends React.Component {
         <Navbar />
         <h2>{pictureOfTheDay.title}</h2>
         <div id="search">
-          <input type="Search" placeholder="Search Image" />
-          <button>Search</button>
+          <input type="text" value={this.state.search} onChange={this.changeHandler} placeholder="Search Image" />
+          <button value="submit" onClick={() => this.props.searchPictures(this.state.search)} onSubmit={this.submitHandler}>Search</button>
         </div>
         <div id="main">
           <div id="body">
@@ -34,10 +41,11 @@ class Body extends React.Component {
                   <div id="desc">
                     <b>Description:</b> {pictureOfTheDay.explanation}
                     <h4>Date: {pictureOfTheDay.date}</h4>
-                    <footer>&copy;<b>Image Copyright information</b></footer>
+                    <footer><b>&copy;Image Copyright information</b></footer>
 
                   </div>
                 </p>
+                
               </>
             )}
           </div>
