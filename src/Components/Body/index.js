@@ -1,32 +1,55 @@
 import React from "react";
 import Navbar from "../Navbar";
 import "./style.css";
+const pageSize = 3;
 class Body extends React.Component {
   constructor(props) {
     super(props);
-    this.state= {search: ""};
+    this.state = {
+      counter: 0,
+      search: "",
+      show: true
+    };
   }
   changeHandler = (e) =>{
     this.setState({search: e.target.value})
   }
-  submitHandler = (e) =>{
-    e.preventDefault()
-    console.log(this.state.search)
+  onClick = (e) =>{
+    e.preventDefault();
+    this.setState({
+      show: false
+    });
+    this.props.searchPictures(this.state.search);
   }
+  previous = () => {
+    if (this.state.counter > 0) {
+      this.setState({
+        counter: this.state.counter - 1
+      })
+    }
+  };
+  next = () => {
+    this.setState({
+      counter: this.state.counter + 1
+    })
+  };
   render() {
-    const { pictureOfTheDay } = this.props;
+    const { pictureOfTheDay, searchResult } = this.props;
+    const index1 = this.state.counter * pageSize;
+    const index2 = index1 + pageSize - 1;
+    const data = searchResult.filter((item, index) => index >= index1 && index <= index2);
     return (
       <>
         <Navbar />
-        <h2>{pictureOfTheDay.title}</h2>
         <div id="search">
           <input type="text" value={this.state.search} onChange={this.changeHandler} placeholder="Search Image" />
-          <button value="submit" onClick={() => this.props.searchPictures(this.state.search)} onSubmit={this.submitHandler}>Search</button>
+          <button value="submit" onClick={this.onClick}>Search</button>
         </div>
         <div id="main">
           <div id="body">
-            {pictureOfTheDay && (
+            {this.state.show && pictureOfTheDay && (
               <>
+                <h2>{pictureOfTheDay.title}</h2>
                 {pictureOfTheDay.media_type === "video" && (
                   <iframe
                     width="420"
@@ -45,7 +68,20 @@ class Body extends React.Component {
 
                   </div>
                 </p>
-                
+
+              </>
+            )}
+            {data.map((item, key) => (
+              <div key={`${this.state.counter}-${key}`}>
+                {item.links && <img src={item.links[0].href} />}
+                <h5>{item.data[0].title}</h5>
+                <h5>{item.data[0].date_created}</h5>
+              </div>
+            ))}
+            {searchResult.length > 0 && (
+              <>
+                <button onClick={this.previous}>Prev</button>
+                <button onClick={this.next}>Next</button>
               </>
             )}
           </div>
