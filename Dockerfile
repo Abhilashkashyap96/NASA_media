@@ -8,8 +8,9 @@ COPY package.json ./
 
 COPY package-lock.json ./
 
+RUN npm install -g npm@9.3.1
 
-RUN npm install --silent
+# RUN npm install --silent
 
 COPY . ./
 
